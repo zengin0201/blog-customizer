@@ -1,13 +1,11 @@
 import { useState, useRef, useEffect, FormEvent } from 'react';
 import clsx from 'clsx';
-
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 import { Select } from 'src/ui/select';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 import { Text } from 'src/ui/text';
-
 import {
 	fontFamilyOptions,
 	fontColors,
@@ -18,27 +16,25 @@ import {
 	ArticleStateType,
 	OptionType,
 } from 'src/constants/articleProps';
-
 import styles from './ArticleParamsForm.module.scss';
 
 type ArticleParamsFormProps = {
 	currentSettings: ArticleStateType;
 	onApply: (settings: ArticleStateType) => void;
 };
-
 export const ArticleParamsForm = ({
 	currentSettings,
 	onApply,
 }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState(false);
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [formState, setFormState] = useState<ArticleStateType>(currentSettings);
 	const formRef = useRef<HTMLDivElement>(null);
 	useEffect(() => {
-		if (!isOpen) return;
+		if (!isMenuOpen) return;
 
 		const handleClickOutside = (event: MouseEvent) => {
 			if (formRef.current && !formRef.current.contains(event.target as Node)) {
-				setIsOpen(false);
+				setIsMenuOpen(false);
 			}
 		};
 
@@ -46,10 +42,9 @@ export const ArticleParamsForm = ({
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
 		};
-	}, [isOpen]);
-
+	}, [isMenuOpen]);
 	const handleToggleOpen = () => {
-		setIsOpen((prev) => !prev);
+		setIsMenuOpen((prev) => !prev);
 	};
 
 	const handleSelectChange =
@@ -70,13 +65,12 @@ export const ArticleParamsForm = ({
 		setFormState(defaultArticleState);
 		onApply(defaultArticleState);
 	};
-
 	return (
 		<div ref={formRef}>
-			<ArrowButton isOpen={isOpen} onClick={handleToggleOpen} />
+			<ArrowButton isOpen={isMenuOpen} onClick={handleToggleOpen} />
 			<aside
 				className={clsx(styles.container, {
-					[styles.container_open]: isOpen,
+					[styles.container_open]: isMenuOpen,
 				})}>
 				<form
 					className={styles.form}
